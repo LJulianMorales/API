@@ -4,18 +4,22 @@
 {% block title %} Login {% endblock title %}
 
 {% block content %}
-  <div class="auth-main">
+
+  <div class="auth-main ">
     <div class="auth-wrapper v3">
-      <div class="auth-form">
-        <div class="card my-5">
-          <div class="card-body">
+      <div class="auth-form bg-image" style="
+      background-image: url('/static/images/TeschiBG.webp');
+      background-size: cover;
+      ">
+        <div class="card my-5 bg-light bg-opacity-75 rounded-5">
+          <div class="card-body ">
             <a class="d-flex justify-content-center">
-              <img src="{% static 'images/logoSistemas3.jpg' %}" />
+              <img src="{% static 'images/Teschilogo.png' %}" style="width: 300px;" alt="logo"/>
             </a>
             <div class="row">
               <div class="d-flex justify-content-center">
                 <div class="auth-header">
-                  <h2 class="text-secondary mt-5"><b>Iniciar sesión</b></h2>
+                  <h2 class="mt-4" style="color: #00793e;"><b>Iniciar sesión</b></h2>
                   <p class="f-16 mt-2">Ingresa tus credenciales para continuar</p>
                 </div>
               </div>
@@ -52,16 +56,16 @@
                   <label class="form-check-label text-muted" for="customCheckc1">Mantener sesión iniciada</label>
                 </div>
                 <h5 class="text-secondary">
-                  <a href="{% url 'password_reset' %}">Olvide mi contraseña</a>
+                  <a class="text-decoration-underline" href="{% url 'password_reset' %}">Olvide mi contraseña</a>
                 </h5>
               </div>
               <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-secondary">Ingresar</button>
+                <button type="submit" class="btn text-white" style="background-color: #00793e;">Ingresar</button>
               </div>
             </form>
             <hr />
             <h5 class="d-flex justify-content-center">Quieres crear una cuenta?
-              <a class="ms-2" href="{% url 'register' %}">Registrate aquí</a>
+              <a class="ms-2 text-decoration-underline" href="{% url 'register' %}">Registrate aquí</a>
             </h5>
           </div>
         </div>

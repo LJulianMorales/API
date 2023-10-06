@@ -6,16 +6,19 @@
 {% block content %}
   <div class="auth-main">
     <div class="auth-wrapper v3">
-      <div class="auth-form">
-        <div class="card mt-5">
+      <div class="auth-form bg-image" style="
+      background-image: url('/static/images/TeschiBG.webp');
+      background-size: cover;
+      ">
+        <div class="card mt-5 bg-light bg-opacity-75 rounded-5">
           <div class="card-body">
             <a href="#" class="d-flex justify-content-center mt-3">
-              <img src="{% static 'images/logoSistemas3.jpg' %}" />
+              <img src="{% static 'images/Teschilogo.png' %}" style="width: 300px;" alt="logo"/>
             </a>
             <div class="row">
               <div class="d-flex justify-content-center">
                 <div class="auth-header">
-                  <h2 class="text-secondary mt-5"><b>Registrarme</b></h2>
+                  <h2 class="mt-4" style="color: #00793e;"><b>Registrarme</b></h2>
                   <p class="f-16 mt-2">Ingresa tus credenciales para registrarte</p>
                 </div>
               </div>
@@ -44,12 +47,12 @@
                 </label>
               </div>
               <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-secondary p-2">Registrarme</button>
+                <button type="submit" class="btn text-white p-2" style="background-color: #00793e;">Registrarme</button>
               </div>
             </form>
             <hr />
             <h5 class="d-flex justify-content-center">Ya tienes una cuenta?
-              <a class="ms-2" href="{% url 'login' %}">Iniciar sesión</a>
+              <a class="ms-2 text-decoration-underline"  href="{% url 'login' %}">Iniciar sesión</a>
             </h5>
           </div>
         </div>
