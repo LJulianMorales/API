@@ -1,0 +1,71 @@
+{% extends 'layouts/auth_base.html' %}
+{% load static %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+  <div class="auth-main">
+    <div class="auth-wrapper v3">
+      <div class="auth-form">
+        <div class="card my-5">
+          <div class="card-body">
+            <a class="d-flex justify-content-center">
+              <img src="{% static 'images/logoSistemas3.jpg' %}" />
+            </a>
+            <div class="row">
+              <div class="d-flex justify-content-center">
+                <div class="auth-header">
+                  <h2 class="text-secondary mt-5"><b>Iniciar sesión</b></h2>
+                  <p class="f-16 mt-2">Ingresa tus credenciales para continuar</p>
+                </div>
+              </div>
+            </div>
+            <div class="d-grid">
+              <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
+                Iniciar con <img src="{% static 'images/authentication/office-365-1.svg' %}" style="width: 150px;" />
+              </button>
+            </div>
+            <div class="saprator mt-3">
+              <span>Ó</span>
+            </div>
+            <h5 class="my-4 d-flex justify-content-center">Iniciar sesión con usuario</h5>
+            <form method="post" >
+              {% csrf_token %}
+
+              {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                  <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+              {% endif %}
+
+              {% for field in form %}
+              <div class="form-floating mb-3">
+                {{field}}
+                <label for="floatingInput">{{ field.label }}</label>
+              </div>
+              <span class="text-danger">{{ field.errors }}</span>
+              {% endfor %}
+              
+              <div class="d-flex mt-1 justify-content-between">
+                <div class="form-check">
+                  <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
+                  <label class="form-check-label text-muted" for="customCheckc1">Mantener sesión iniciada</label>
+                </div>
+                <h5 class="text-secondary">
+                  <a href="{% url 'password_reset' %}">Olvide mi contraseña</a>
+                </h5>
+              </div>
+              <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-secondary">Ingresar</button>
+              </div>
+            </form>
+            <hr />
+            <h5 class="d-flex justify-content-center">Quieres crear una cuenta?
+              <a class="ms-2" href="{% url 'register' %}">Registrate aquí</a>
+            </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

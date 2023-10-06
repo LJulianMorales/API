@@ -1,0 +1,59 @@
+{% extends 'layouts/auth_base.html' %}
+{% load static %}
+
+{% block title %} SignUp {% endblock title %}
+
+{% block content %}
+  <div class="auth-main">
+    <div class="auth-wrapper v3">
+      <div class="auth-form">
+        <div class="card mt-5">
+          <div class="card-body">
+            <a href="#" class="d-flex justify-content-center mt-3">
+              <img src="{% static 'images/logoSistemas3.jpg' %}" />
+            </a>
+            <div class="row">
+              <div class="d-flex justify-content-center">
+                <div class="auth-header">
+                  <h2 class="text-secondary mt-5"><b>Registrarme</b></h2>
+                  <p class="f-16 mt-2">Ingresa tus credenciales para registrarte</p>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted" style="width: 100%">
+              Registrarme con <img src="{% static 'images/authentication/office-365-1.svg' %}" style="width: 150px;" />
+            </button>
+            <div class="saprator mt-3">
+              <span>Ó</span>
+            </div>
+            <h5 class="my-4 d-flex justify-content-center">Registrarte con una dirección de correo</h5>
+            <form method="post">
+              {% csrf_token %}
+
+              {% for field in form %}
+              <div class="form-floating mb-3">
+                {{field}}
+                <label for="floatingInput">{{ field.label }}</label>
+              </div>
+              <span class="text-danger">{{ field.errors }}</span>
+              {% endfor %}
+              <div class="form-check mt-3s">
+                <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
+                <label class="form-check-label" for="customCheckc1">
+                  <h5>Acepto los <span>terminos y condiciones</span></h5>
+                </label>
+              </div>
+              <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-secondary p-2">Registrarme</button>
+              </div>
+            </form>
+            <hr />
+            <h5 class="d-flex justify-content-center">Ya tienes una cuenta?
+              <a class="ms-2" href="{% url 'login' %}">Iniciar sesión</a>
+            </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
