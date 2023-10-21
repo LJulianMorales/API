@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
 from api.forms import LoginForm 
 
 #Django plantilla
@@ -12,38 +11,128 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth import login
 
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
 
 #Enail
-import requests
-from django.http import HttpResponse
 from django.views import View
-from msal import PublicClientApplication
 
-from django.views import View
-from django.shortcuts import render, HttpResponse, redirect
-from msal import PublicClientApplication
-import requests
-
-from .models import Usuario
-
-from django.shortcuts import render, redirect
-import requests
 from .forms import LoginForm
 from django.views import View
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 
-from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib import messages
-from rest_framework.response import Response
-
 
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from .forms import LoginForm
+
+from django.shortcuts import render
+from django.views import View
+
+from django.shortcuts import render, redirect
+
+from django.views import View
+from django.shortcuts import render
+
+
+from django.shortcuts import render, redirect
+import requests
+from django.conf import settings
+from django.shortcuts import render, redirect
+import requests
+from django.conf import settings
+from urllib.parse import urlencode
+
+from django.shortcuts import render, redirect
+from django.conf import settings
+import requests
+
+# ----------- Se importan los modelos ----------------
+
+#from .models import usuario
+#from .models import tipousuario
+from .models import Account
+
+def microsoft_login(request):
+    authorization_url = f"{settings.AZURE_AD_AUTHORITY}/oauth2/v2.0/authorize"
+    params = {
+        'client_id': settings.AZURE_AD_CLIENT_ID,
+        'response_type': 'code',
+        'redirect_uri': settings.AZURE_AD_REDIRECT_URI,
+        'response_mode': 'query',
+        'scope': 'User.Read',
+    }
+    login_url = f"{authorization_url}?{urlencode(params)}"
+    return redirect(login_url)
+
+def microsoft_callback(request):
+    code = request.GET.get('code')
+    token_url = f"{settings.AZURE_AD_AUTHORITY}/oauth2/v2.0/token"
+    data = {
+        'client_id': settings.AZURE_AD_CLIENT_ID,
+        'scope': 'User.Read',
+        'code': code,
+        'redirect_uri': settings.AZURE_AD_REDIRECT_URI,
+        'grant_type': 'authorization_code',
+        'client_secret': settings.AZURE_AD_CLIENT_SECRET,
+    }
+    token_response = requests.post(token_url, data=data).json()
+    access_token = token_response.get('access_token')
+
+    if access_token:
+        user_info_url = 'https://graph.microsoft.com/v1.0/me'
+        headers = {'Authorization': f'Bearer {access_token}'}
+        user_info = requests.get(user_info_url, headers=headers).json()
+        
+        if 'userPrincipalName' in user_info:
+            user_email = user_info['userPrincipalName']
+            if findAccount(request, user_email):
+                return render(request, 'pages/profile-info.html', {'user_info': user_info})
+            else:
+                return render(request, 'accounts/solicitud_alta.html')
+
+    return render(request, 'accounts/login_error.html')
+
+
+
+def findAccount(request, user_email):
+    try:
+        account_match = Account.objects.get(email=user_email)
+        return True
+    except Account.DoesNotExist:
+        return False
+
+
+
+"""
+class microsoft_profile(APIView):
+    template_name = "pages/profile-info.html"
+    print("entro")
+    def post(self, request):
+        # Verifica si el usuario está autenticado
+        if request.user.is_authenticated:
+            try:
+                # Obtiene los detalles del perfil del usuario desde las redes sociales (Azure AD)
+                social = UserSocialAuth.objects.get(user=request.user, provider='azuread-oauth2')
+                social_data = social.extra_data
+                user_email = social_data.get('userPrincipalName')
+                display_name = social_data.get('displayName')
+
+                # Comprueba si los datos requeridos están disponibles
+                if user_email and display_name:
+                    return render(request, self.template_name, {
+                        'user_email': user_email,
+                        'display_name': display_name,
+                    })
+
+            except UserSocialAuth.DoesNotExist:
+                pass
+
+        # Si el usuario no está autenticado o faltan datos, puedes redirigirlo a la página de inicio de sesión
+        return redirect(reverse('auth_login_microsoft'))  # Utiliza el nombre de URL definido en tus rutas URL
+"""
+
 
 """
 class EnviarCorreoOutlook(View):
@@ -117,6 +206,7 @@ class EnviarCorreoOutlook(View):
 
             return render(request, self.template_name, context)
 """
+
 class EnviarCorreoOutlook(View):
   template_name = "pages/emailSuccess.html"
   def get(self, request):        
@@ -211,9 +301,7 @@ class EnviarCorreoOutlook(View):
             }             
             return render(request, self.template_name, context)
 """
-
-
-
+"""
 class IniciarSesion(APIView):
     template_name = "accounts/login.html"
 
@@ -235,7 +323,7 @@ class IniciarSesion(APIView):
         # Renderiza la página de inicio de sesión nuevamente con los errores
         return render(request, "accounts/login.html", {'form': form})
 
-
+        
 class RegistroUsuarioView:
     def crear_usuario(request):
         if request.method == 'POST':
@@ -258,7 +346,7 @@ class RegistroUsuarioView:
             return redirect('accounts/login.html')
         else:
             return render(request, 'accounts/register.html')  # Renderiza el formulario de registro en el método GET
-
+"""
 class EnviarCorreo(APIView):
     def enviar_correo(self, nombre, correo, contraseña):        
         try:
@@ -285,6 +373,7 @@ class redireccionarIndex(APIView):
     template_name = "pages/index.html"
     def get(self, request):
         # Lógica para renderizar la página 'index.html' en una solicitud GET
+        GoogleSheetsAPIView()
         return render(request, self.template_name)
 
     def post(self, request):
@@ -294,7 +383,7 @@ class redireccionarIndex(APIView):
         return redirect('redireccionarIndex')  # Asegúrate de que 'otra_pagina' sea el nombre de una vista en tu urls.py
 
 class LoginView(APIView):
-    template_name = "pages/login.html"  # Asegúrate de que el nombre de la plantilla sea correcto
+    template_name = "accounts/login.html"  
 
     def get(self, request):
         form = LoginForm()
@@ -345,6 +434,9 @@ def alta_profesores(request):
 def alta_materias(request):
   return render(request, 'pages/alta_materias.html')
 
+def solicitud_alta(request):
+  return render(request, 'accounts/solicitud_alta.html')
+
 
 # Authentication
 def registration(request):
@@ -387,3 +479,232 @@ def user_logout_view(request):
   logout(request)
   return redirect('/accounts/login/')
 
+from .models import Account, CustomUser, UserType
+from django.http import JsonResponse
+
+def executeFunction(request):
+    """
+    # Crear una instancia de Account primero
+    
+    userType = UserType(description='Administrador')
+    userType.save()
+    userType = UserType(description='Docente')
+    userType.save()
+    userType = UserType(description='Alumno')
+    userType.save()
+    
+    # Recupera la instancia de tipousuario con id=1
+    user_type = tipousuario.objects.get(tipo_usuario_id=1)
+
+    # Crea una nueva instancia de Account y asigna la instancia de tipousuario
+    account = Account(email='admin@example.com', password='1234', id_tipo_usuario=user_type)
+    account.save()
+    
+    account_id = Account.objects.get(id=1)
+
+    # Luego, crear una instancia de CustomUser y asignarle la instancia de Account
+    custom_user = usuario(enrollment='00000000', account_id=account_id, first_name='Admin')
+    custom_user.save()
+    """
+
+    try:
+        # Realiza las operaciones necesarias en tu función de Python aquí
+        # ...
+
+        return JsonResponse({'status': 'success'})  # Devuelve una respuesta JSON
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+# -------------------- Vistas de registro -----------------------
+
+from django.shortcuts import render, redirect
+from .models import Account, CustomUser, UserType, Pregunta, Respuesta
+from .forms import alumnForm, AccountForm 
+import secrets
+import string
+
+def generate_password():
+    alphabet = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(secrets.choice(alphabet) for _ in range(8))
+    return password
+"""
+def registrar_usuario(request):
+
+    print("Entro")
+    if request.method == 'POST':
+
+        account_form = AccountForm(request.POST) 
+        custom_user_form = alumnForm(request.POST)
+
+        if account_form.is_valid() and custom_user_form.is_valid():
+
+            # Extrae los datos del formulario
+            matricula = custom_user_form.cleaned_data['enrollment']
+            type_user_id_value = custom_user_form.cleaned_data['type_user_id']
+
+            email = f'{matricula}@teschi.edu.mx'
+            password = generate_password()
+
+            # Intenta crear una instancia de Account
+            try:
+                user_type = UserType.objects.get(id=type_user_id_value)
+                account = Account(email=email, password=password, type_user_id=user_type)
+                account.save()
+
+                # Si se ha creado con éxito, usa el account_id para crear un CustomUser
+                custom_user = CustomUser(enrollment=matricula, 
+                                         account_id=account, 
+                                         first_name=custom_user_form.cleaned_data['first_name'],
+                                         last_name=custom_user_form.cleaned_data['last_name'],
+                                         middle_name=custom_user_form.cleaned_data['middle_name'],
+                                         curp=custom_user_form.cleaned_data['curp'],
+                                         nss=custom_user_form.cleaned_data['nss'],
+                                         phone=custom_user_form.cleaned_data['phone'],
+                                         mobile=custom_user_form.cleaned_data['mobile'])
+                custom_user.save()
+                usuario_creado = "El usuario se creó con éxito"
+                EnviarCorreo().enviar_correo(custom_user_form.cleaned_data['first_name'], email, password)
+                return JsonResponse({'status': 'success'})
+            except UserType.DoesNotExist:                
+                return JsonResponse({'status': 'error'})
+            except Exception as e:
+                return JsonResponse({'status': 'error', 'message': str(e)})
+
+    else:
+        return JsonResponse({'status': 'error'})
+
+    context = {
+        'account_form': account_form,
+        'custom_user_form': custom_user_form,
+        'usuario_creado': usuario_creado,  # Pasa el mensaje a la plantilla
+    }
+
+    return JsonResponse({'status': 'error'})
+
+"""
+
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+
+
+def registrar_usuario(request):
+    print("Entro")
+    if request.method == 'POST':
+        # Asegúrate de que el contenido de la solicitud sea JSON
+        if request.content_type == 'application/json':
+            try:
+                data = json.loads(request.body.decode('utf-8'))  # Analiza los datos JSON
+
+                matricula = data.get('enrollment')
+                type_user_id_value = data.get('type_user_id')
+
+                email = f'{matricula}@teschi.edu.mx'
+                password = generate_password()
+
+                # Intenta crear una instancia de Account
+                try:
+                    user_type = UserType.objects.get(id=type_user_id_value)
+                    account = Account(email=email, password=password, type_user_id=user_type)
+                    account.save()
+
+                    # Si se ha creado con éxito, usa el account_id para crear un CustomUser
+                    custom_user = CustomUser(enrollment=matricula,
+                                             account_id=account,
+                                             first_name=data.get('first_name'),
+                                             last_name=data.get('last_name'),
+                                             middle_name=data.get('middle_name'),
+                                             curp=data.get('curp'),
+                                             nss=data.get('nss'),
+                                             phone=data.get('phone'),
+                                             mobile=data.get('mobile'))
+                    custom_user.save()
+                    return JsonResponse({'status': 'success', 'message': 'Usuario registrado'})
+                except UserType.DoesNotExist:
+                    return JsonResponse({'status': 'error', 'message': 'El tipo de usuario no existe'})
+                except Exception as e:
+                    return JsonResponse({'status': 'error', 'message': str(e)})
+            except json.JSONDecodeError:
+                return JsonResponse({'status': 'error', 'message': 'Datos JSON inválidos'})
+
+    return JsonResponse({'status': 'error', 'message': 'Error que aun no compruebo'})
+
+from google.oauth2 import service_account
+import gspread
+from rest_framework.response import Response
+"""
+class GoogleSheetsAPIView(APIView):
+    def get(self, request):
+        # Ruta al archivo de credenciales JSON
+        credentials_file = "api/templates/credentials/django-402605-a2f85ac7560a.json"
+        # Configura las credenciales utilizando google-auth
+        scopes = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+        credentials = service_account.Credentials.from_service_account_file(
+            credentials_file, scopes=scopes
+        )
+
+        # Autentica con Google Sheets
+        gc = gspread.Client(auth=credentials)
+        gc.session.verify = True  # Esto habilita la verificación SSL
+
+        # Abre la hoja de cálculo por su URL o nombre
+        spreadsheet = gc.open("ControlEscolarISCS")
+
+        # Accede a las hojas y realiza las operaciones necesarias
+        worksheet = spreadsheet.worksheet("RespuestasFORM")
+
+        # Realiza operaciones en la hoja de cálculo, como leer datos
+        data = worksheet.get_all_records()
+        # Procesa los datos y realiza las acciones necesarias
+
+        Response.objects.all().delete()
+        print(data)
+
+        return Response({"Datos de Google Sheets": data})"""
+    
+from django.shortcuts import get_object_or_404
+class GoogleSheetsAPIView(APIView):
+    def get(self, request):
+        # Ruta al archivo de credenciales JSON
+        credentials_file = "api/templates/credentials/django-402605-a2f85ac7560a.json"
+        # Configura las credenciales utilizando google-auth
+        scopes = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+        credentials = service_account.Credentials.from_service_account_file(
+            credentials_file, scopes=scopes
+        )
+
+        # Autentica con Google Sheets
+        gc = gspread.Client(auth=credentials)
+        gc.session.verify = True  # Esto habilita la verificación SSL
+
+        # Abre la hoja de cálculo por su URL o nombre
+        spreadsheet = gc.open("ControlEscolarISCS")
+
+        # Accede a las hojas y realiza las operaciones necesarias
+        worksheet = spreadsheet.worksheet("RespuestasFORM")
+
+        # Realiza operaciones en la hoja de cálculo, como leer datos
+        data = worksheet.get_all_records()
+        
+        # Borra los registros anteriores en el modelo Respuesta
+        Respuesta.objects.all().delete()
+
+        # Itera a través de los datos y almacena las respuestas en el modelo Respuesta
+        for entry in data:
+            for pregunta, respuesta in entry.items():
+                if pregunta == "Marca temporal" or pregunta == "Dirección de correo electrónico":
+                    continue
+
+                # Depuración: Agregar impresiones
+                print(f"Pregunta: {pregunta}, Respuesta: {respuesta}")
+
+                # Busca la pregunta en el modelo Cuestion por descripción
+                _cuestion = get_object_or_404(Pregunta, description=pregunta)
+                _id = int(_cuestion.pk)
+
+                # Crea un nuevo objeto Response con el id de la pregunta y la respuesta
+                _response = Respuesta(cuestion=_id, response=respuesta)
+                _response.save()
+
+        return Response({"Datos de Google Sheets": data})

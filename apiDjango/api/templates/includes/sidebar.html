@@ -17,11 +17,11 @@
         </li>
         
         <li class="pc-item">
-          {% if request.user.is_superuser %}
+          
           <a href="{% url 'admin:index' %}" class="pc-link">
-          {% else %}
+          
           <a href="{% url 'redireccionarIndex' %}" class="pc-link">
-          {% endif %}
+         
             <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
             <span class="pc-mtext">Dashboard</span></a>
         </li>
@@ -34,18 +34,16 @@
           <a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-key"></i></span><span
               class="pc-mtext">Reportes</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
           <ul class="pc-submenu">
-            {% if request.user.is_superuser %}
+            
               <li class="pc-item"><a class="pc-link" href="{% url 'admin:password_change' %}">Change Password</a></li>
               <li class="pc-item"><a class="pc-link" href="{% url 'admin:logout' %}">Logout</a></li>
-            {% else %}
-              {% if request.user.is_authenticated %}
+            
               <li class="pc-item"><a class="pc-link" href="{% url 'password_change' %}">Change Password</a></li>
               <li class="pc-item"><a class="pc-link" href="{% url 'logout' %}">Logout</a></li>
-              {% else %}
+             
               <li class="pc-item"><a class="pc-link" href="{% url 'sample_page' %}">Reportes 1</a></li>
               <li class="pc-item"><a class="pc-link" href="{% url 'sample_page' %}">Reportes 2</a></li>
-              {% endif %}
-            {% endif %}
+          
           </ul>
         </li>
 
@@ -73,7 +71,7 @@
           </ul>
         </li>
 
-        {% if request.user.is_authenticated and not request.user.is_superuser %}
+   
         <li class="pc-item pc-caption">
           <label>Elements</label>
           <i class="ti ti-apps"></i>
@@ -102,8 +100,7 @@
           <a href="https://github.com/app-generator/django-admin-berry" target="_blank" class="pc-link"><span
               class="pc-micon"><i class="ti ti-vocabulary"></i></span><span class="pc-mtext">DOCS</span></a></li>
       </ul>
-      {% endif %}
-      
+    
     </div>
   </div>
 </nav>

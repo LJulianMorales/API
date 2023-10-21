@@ -15,18 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import Home, redireccionarIndex, LoginView
+from api.views import Home, redireccionarIndex, LoginView #,microsoft_profile
 
-from django.urls import path
+from django.urls import path, re_path, include
 from api import views
 
 from django.contrib.auth import views as auth_views
+#from social_django.views import auth, complete
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", Home.as_view(), name="login"),
+    path("", LoginView.as_view(), name="login"),
     path('redireccionarIndex/', redireccionarIndex.as_view(), name='redireccionarIndex'),
-    path('login/', LoginView.as_view(), name='login'),
+    path('accounts/login', LoginView.as_view(), name='login'),
 
     path('typography/', views.typography, name='typography'),
     path('color/', views.color, name='color'),
@@ -37,6 +39,19 @@ urlpatterns = [
     path('emailSuccess/', views.EnviarCorreoOutlook.as_view(), name='enviar_correo'),
 
     path('', views.EnviarCorreo.as_view(), name='enviar_correo'),
+
+    #path('pages/profile-info/', microsoft_profile.as_view(), name='microsoft_profile'),
+    #path('login/microsoft/', auth, name='auth_login_microsoft'),
+    #path('complete/microsoft/', complete, name='complete_microsoft'),
+    path('accounts/solicitud_alta/',  views.solicitud_alta, name='solicitud_alta'),
+
+    path('',  views.executeFunction, name='execute'),
+
+    path('auth/microsoft/login/', views.microsoft_login, name='microsoft_login'),
+    path('auth/microsoft/callback/', views.microsoft_callback, name='microsoft_callback'),
+
+    path('alumnos/', views.registrar_usuario, name='registrar_usuario'),    
+    path('google/',views.GoogleSheetsAPIView.as_view(), name='google'),
 
     # Authentication
     path('accounts/login/', views.UserLoginView.as_view(), name='login'),

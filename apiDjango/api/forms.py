@@ -9,7 +9,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, UsernameField, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-
+from .models import CustomUser
 
 class RegistrationForm(UserCreationForm):
     password1 = forms.CharField(
@@ -88,3 +88,62 @@ class UserPasswordChangeForm(PasswordChangeForm):
         'class': 'form-control',
         "placeholder": "Confirm New Password"
     }), label="Confirm New Password")
+
+"""
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('enrollment', 'account_id', 'first_name', 'last_name', 'middle_name', 'curp', 'nss', 'phone', 'mobile')
+
+    widgets = {
+        'enrollment': forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enrollment'
+        }),
+        'account_id': forms.Select(attrs={
+            'class': 'form-control',
+        }),
+        'first_name': forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'First Name'
+        }),
+        'last_name': forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Last Name'
+        }),
+        'middle_name': forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Middle Name'
+        }),
+        'curp': forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'CURP'
+        }),
+        'nss': forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'NSS'
+        }),
+        'phone': forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Phone'
+        }),
+        'mobile': forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Mobile'
+        }),
+    }
+"""
+
+from django import forms
+from .models import Account
+
+class AccountForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['email', 'type_user_id']
+
+
+class alumnForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['enrollment', 'first_name', 'last_name', 'middle_name', 'curp', 'nss', 'phone', 'mobile']

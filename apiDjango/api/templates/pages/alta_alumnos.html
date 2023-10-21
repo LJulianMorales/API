@@ -5,6 +5,82 @@
 
 {% block content %}
   <!-- [ Main Content ] start -->
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Busca el token CSRF
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    $(document).ready(function() {
+        $('#btnRegistrar').click(function() {
+            // Obtén los datos del formulario como un objeto
+            var formData = {
+                enrollment: $('#enrollment').val(),
+                type_user_id: $('#type_user_id').val(),
+                first_name: $('#first_name').val(),
+                last_name: $('#last_name').val(),
+                middle_name: $('#middle_name').val(),
+                curp: $('#curp').val(),
+                nss: $('#nss').val(),
+                phone: $('#phone').val(),
+                mobile: $('#mobile').val()
+            };
+            
+
+            // Realiza una solicitud AJAX para ejecutar la función de Python
+            $.ajax({
+                url: '{% url 'registrar_usuario' %}', // Reemplaza con la URL de tu vista
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData), 
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken') // Agrega el token CSRF como encabezado
+                },// Convierte el objeto en una cadena JSON
+                success: function(data) {
+                  if (data.status === 'success') {
+            // La función se ejecutó con éxito, puedes mostrar un mensaje de éxito
+                      $('#mensaje').html('La función se ejecutó con éxito.');
+                  } else if (data.status === 'error') {
+                      // Hubo un error, muestra el mensaje de error devuelto desde la vista
+                      $('#mensaje').html('Error: ' + data.message);
+                  }
+
+                  $('#mensaje').show();
+                    setTimeout(function() {
+                        $('#mensaje').hide();
+                    }, 10000);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                  // Aquí manejas los errores de la solicitud AJAX
+                  $('#mensaje').html('Hubo un error al ejecutar la función: ' + errorThrown);
+                  $('#mensaje').show();
+                  setTimeout(function() {
+                      $('#mensaje').hide();
+                  }, 10000);
+                }
+            });
+        });
+    });
+
+
+  </script>
+
+
   <div class="pc-container">
     <div class="pc-content">
       <!-- [ breadcrumb ] start -->
@@ -35,9 +111,80 @@
             <div class="card-header">
               <h5>Alta alumnos</h5>
             </div>
-            <div class="card-body">
-              <p>
-                <a href="{% url 'enviar_correo' %}" class="btn btn-primary">Enviar Correo</a>
+            <div class="card-body">            
+
+              <div id="mensaje" style="display: none;"></div>
+            
+
+              <p>       
+
+                <form method="post" id="registro-form">
+                  {% csrf_token %}
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">Matricula:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="enrollment" name="enrollment" placeholder="Matricula">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">Nombre:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Nombre">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">Apellido Paterno:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Apellido Paterno">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">Apellido Materno:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Apellido Materno">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">CURP:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="curp" name="curp" placeholder="CURP">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">NSS:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="nss" name="nss" placeholder="NSS">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">Teléfono:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="phone" name="phone" placeholder="Teléfono">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">Celular:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Celular">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="colFormLabelSm" class="col-sm-2 col-form-label">Tipo usuario:</label>
+                    <div class="col-sm-10">
+                      <select id="type_user_id" name="type_user_id" class="form-control">
+                        <option value="1">Administrador</option>
+                        <option value="2">Docente</option>
+                        <option selected value="3">Alumno</option>
+                      </select>
+                    </div>
+                  </div>         
+                  <div class="form-group row">
+                    <div class="col-sm-10">
+                      <button type="button" class="btn btn-primary" id="btnRegistrar">Registrar</button>
+                    </div>
+                  </div>
+                </form>
+                               
               </p>
             </div>
           </div>

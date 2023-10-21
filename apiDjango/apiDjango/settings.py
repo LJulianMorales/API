@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
 ]
 
 MIDDLEWARE = [
@@ -49,7 +50,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
+
+
+AZURE_AD_CLIENT_ID = '3acebf80-2f2b-4d3b-9858-5e63ec6371bf'
+AZURE_AD_CLIENT_SECRET = 'yvZ8Q~kEmWKP5SzSEjXVRUX550j19mg_OrlxMaZL'
+AZURE_AD_AUTHORITY = 'https://login.microsoftonline.com/dcec6cc1-cc36-4bdf-a82c-eaddb2de00ea'
+AZURE_AD_REDIRECT_URI = 'http://localhost:8000/auth/microsoft/callback'  # Cambia esto según tu configuración
+
+
+
+
 
 ROOT_URLCONF = 'apiDjango.urls'
 
@@ -64,6 +76,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -75,12 +88,26 @@ WSGI_APPLICATION = 'apiDjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db_control_escolar',
+        'USER': 'postgres',
+        'PASSWORD': 'Postgres1234',
+        'HOST': 'localhost',
+        'PORT': '5433',
+    }
+}
+
 
 
 # Password validation

@@ -1,0 +1,40 @@
+{% extends 'layouts/auth_base.html' %}
+{% load static %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+  <div class="auth-main">
+    <div class="auth-wrapper v3">
+      <div class="auth-form bg-image" style="
+      background-image: url('/static/images/TeschiBG.webp');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      ">
+        <div class="card my-5 bg-light bg-opacity-75 rounded-5">
+          <div class="card-body">
+            <a href="#" class="d-flex justify-content-center">
+              <img src="{% static 'images/logoSistemas3.jpg' %}" />
+            </a>
+            <div class="row">
+              <div class="d-flex justify-content-center">
+                <div class="auth-header">
+                  <h2 class="text-secondary mt-5"><b>Solicita tu registro</b></h2>
+                  <p class="f-16 mt-2">No estas registrado, solicita al departamento de control escolar te registre.</p>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <h5 class="text-decoration-underline">
+              <a class="ms-2" href="{% url 'login' %}">Iniciar sesión</a>
+            </h5>
+            <h5 class="text-decoration-underline">
+              <a class="ms-2" href="{% url 'register' %}">Registrarme</a>
+            </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

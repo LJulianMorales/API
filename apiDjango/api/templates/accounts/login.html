@@ -10,6 +10,8 @@
       <div class="auth-form bg-image" style="
       background-image: url('/static/images/TeschiBG.webp');
       background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       ">
         <div class="card my-5 bg-light bg-opacity-75 rounded-5">
           <div class="card-body ">
@@ -24,11 +26,14 @@
                 </div>
               </div>
             </div>
-            <div class="d-grid">
-              <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                Iniciar con <img src="{% static 'images/authentication/office-365-1.svg' %}" style="width: 150px;" />
-              </button>
-            </div>
+            <form method="POST" action="{% url 'microsoft_login' %}">
+              {% csrf_token %}
+              <div class="d-grid">
+                <button type="submit" class="btn mt-2 btn-light-primary bg-light text-muted">
+                  Iniciar con <img src="{% static 'images/authentication/office-365-1.svg' %}" style="width: 150px;" />
+                </button>
+              </div>
+            </form>
             <div class="saprator mt-3">
               <span>Ó</span>
             </div>

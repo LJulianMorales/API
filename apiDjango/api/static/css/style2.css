@@ -1,4 +1,10 @@
 @charset "UTF-8";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Agrega tus estilos personalizados aquí */
+
 /**======================================================================
 =========================================================================
 Template Name: DashboardKit - Most Complete Bootstrap Admin Template
