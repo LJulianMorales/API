@@ -52,6 +52,11 @@ urlpatterns = [
 
     path('alumnos/', views.registrar_usuario, name='registrar_usuario'),    
     path('google/',views.GoogleSheetsAPIView.as_view(), name='google'),
+    # path('consulta/',views.consulta, name='consulta'),
+    path('consulta_respuestas/<int:cuestion>/', views.consulta_respuestas, name='consulta_respuestas'),
+    
+
+    
 
     # Authentication
     path('accounts/login/', views.UserLoginView.as_view(), name='login'),

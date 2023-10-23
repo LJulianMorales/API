@@ -374,6 +374,7 @@ class redireccionarIndex(APIView):
     def get(self, request):
         # Lógica para renderizar la página 'index.html' en una solicitud GET
         GoogleSheetsAPIView()
+        # consulta(request)
         return render(request, self.template_name)
 
     def post(self, request):
@@ -664,6 +665,8 @@ class GoogleSheetsAPIView(APIView):
         return Response({"Datos de Google Sheets": data})"""
     
 from django.shortcuts import get_object_or_404
+from django.db import connection
+
 class GoogleSheetsAPIView(APIView):
     def get(self, request):
         # Ruta al archivo de credenciales JSON
@@ -688,6 +691,7 @@ class GoogleSheetsAPIView(APIView):
         data = worksheet.get_all_records()
         
         # Borra los registros anteriores en el modelo Respuesta
+        
         Respuesta.objects.all().delete()
 
         # Itera a través de los datos y almacena las respuestas en el modelo Respuesta
@@ -697,7 +701,7 @@ class GoogleSheetsAPIView(APIView):
                     continue
 
                 # Depuración: Agregar impresiones
-                print(f"Pregunta: {pregunta}, Respuesta: {respuesta}")
+                # print(f"Pregunta: {pregunta}, Respuesta: {respuesta}")
 
                 # Busca la pregunta en el modelo Cuestion por descripción
                 _cuestion = get_object_or_404(Pregunta, description=pregunta)
@@ -706,5 +710,50 @@ class GoogleSheetsAPIView(APIView):
                 # Crea un nuevo objeto Response con el id de la pregunta y la respuesta
                 _response = Respuesta(cuestion=_id, response=respuesta)
                 _response.save()
-
+                
         return Response({"Datos de Google Sheets": data})
+    
+
+
+from django.db import connection
+from django.http import JsonResponse
+
+
+def consulta_respuestas(request, cuestion):
+    # Define la consulta SQL
+    query = """
+        SELECT response AS respuesta, COUNT(response) AS total
+        FROM api_respuesta
+        WHERE cuestion = %s
+        GROUP BY response;
+    """
+
+    # Ejecuta la consulta SQL con el valor de 'cuestion'
+    with connection.cursor() as cursor:
+        cursor.execute(query, [cuestion])
+        result = cursor.fetchall()
+
+    # Formatea los resultados como un diccionario
+    data = [{'respuesta': row[0], 'total': row[1]} for row in result]
+
+    # Devuelve los resultados en formato JSON
+    return JsonResponse(data, safe=False)
+
+
+# def consulta(request):
+#     with connection.cursor() as cursor:
+#         cursor.execute("""
+#             SELECT response AS respuesta, COUNT(response) AS total
+#             FROM api_respuesta
+#             WHERE cuestion = 1
+#             GROUP BY response;
+#         """)
+#         data = cursor.fetchall()
+    
+#     results = []
+#     for row in data:
+#         results.append({'respuesta': row[0], 'total': row[1]})
+    
+#     print(results)
+    
+#     return JsonResponse({'results': results})
