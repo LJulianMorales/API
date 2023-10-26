@@ -12,45 +12,14 @@
     <!-- [ Main Content ] start --> 
       <!-- [ sample-page ] start -->
       <div class="container">
-
         <div class="row my-3">
-          <div class="col-xl-8 col-md-6">
-            <div class="card bg-secondary-dark dashnum-card text-white overflow-hidden">
-              <span class="round small"></span>
-              <span class="round big"></span>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col">
-                    <div class="avtar avtar-lg">
-                      <i class="text-white ti ti-crown"></i>
-                    </div>
-                  </div>                 
-                </div>
-                <span class="text-white d-block f-34 f-w-500 my-2"><label id="lblTotalEncuestas">0</label> <i class="ti ti-arrow-up-right-circle opacity-50"></i></span>
-                <p class="mb-0 opacity-100">Encuestas contestadas</p>
-                <div class="progress" style="margin-top: 90px; height: 30px;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated" id="progressBar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><label id="lblTotalEncuestasBar">0%</label></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Fila 4 -->
-          <div class="col-12 col-sm-6 col-md-4 my-3">
-            <div class="Tarjeta text-center bg-white text-dark p-4 rounded ">
-                <h3>¿Crees eficiente el sistema de control escolar actual?</h3>
-                <div id="pregunta1" class="chart-container"></div>
-            </div>
-          </div>                     
-      </div>
-
-        <div class="row my-3">
-            <!-- Fila 1 -->            
+            <!-- Fila 1 -->
             <div class="col-12 col-sm-6 col-md-4 my-3">
-              <div class="Tarjeta text-center bg-white text-dark p-4 rounded h-100 ">
-                  <h3>¿Que notificaciones te gustaria recibir?</h3>
-                  <div id="pregunta9" class="chart-container"></div>
-              </div>
-          </div>
+                <div class="Tarjeta text-center bg-white text-dark p-4 rounded h-100 ">
+                    <h3>¿Crees eficiente el sistema de control escolar actual?</h3>
+                    <div id="pregunta1" class="chart-container"></div>
+                </div>
+            </div>
             <div class="col-12 col-sm-6 col-md-4 my-3">
                 <div class="Tarjeta text-center bg-white text-dark p-4 rounded h-100 ">
                     <h3>¿Cómo te gustarían las inscripciones?</h3>
@@ -93,37 +62,52 @@
                 <div class="Tarjeta text-center bg-white text-dark p-4 rounded h-100">
                     <h3>¿Como consideras la navegación actual del sistema de control escolar actual?</h3>
                     <div id="pregunta7" class="chart-container"></div>
+
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+<div class="pc-container">
+  <div class="pc-content">
+    <!-- [ Main Content ] start --> 
+      <!-- [ sample-page ] start -->
+      <div class="container">
+
+        <div class="row my-3">
+          <div class="col-xl-8 col-md-6">
+            <div class="card bg-secondary-dark dashnum-card text-white overflow-hidden">
+              <span class="round small"></span>
+              <span class="round big"></span>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <div class="avtar avtar-lg">
+                      <i class="text-white ti ti-crown"></i>
+                    </div>
+                  </div>                 
                 </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-4 my-3">
-                <div class="Tarjeta text-center bg-white text-dark p-4 rounded h-100">
-                    <h3>¿Te sentirías seguro proporcionando información personal y académica en el proceso de inscripción en línea?</h3>
-                    <div id="pregunta8" class="chart-container"></div>
+                <div class="col-auto">
+                  <div class="btn-group">
+                    <a
+                      type="button"
+                      class="avtar bg-secondary dropdown-toggle arrow-none"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="ti ti-dots"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><button class="dropdown-item" type="button">Opcion1</button></li>
+                      <li><button class="dropdown-item" type="button">Opcion2</button></li>
+                    </ul>
+                  </div>
                 </div>
+              </div>
+              <span class="text-white d-block f-34 f-w-500 my-2">0 <i class="ti ti-arrow-up-right-circle opacity-50"></i></span>
+              <p class="mb-0 opacity-50">Total</p>
             </div>
-            <div class="col-12 col-sm-6 col-md-4 my-3">
-                <div class="Tarjeta text-center bg-white text-dark p-4 rounded h-100">
-                    <h3>¿Qué opinas sobre la posibilidad de inscribirte en línea desde dispositivos móviles?</h3>
-                    <div id="pregunta10" class="chart-container"></div>
-                </div>
-            </div>
+          </div>
         </div>
-            
-    </div>
-  
-  </div>
-</div>
-
-
-
-  <!-- [ Main Content ] start -->
-  <!-- <div class="pc-container">
-    <div class="pc-content"> -->
-      <!-- [ Main Content ] start -->
-      <!-- <div class="row"> -->
-        
-        <!-- [ sample-page ] start -->
-        <!-- <div class="col-xl-4 col-md-6">
+        <div class="col-xl-4 col-md-6">
           <div class="card bg-primary-dark dashnum-card text-white overflow-hidden">
             <span class="round small"></span>
             <span class="round big"></span>

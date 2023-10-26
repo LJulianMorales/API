@@ -60,6 +60,83 @@
 var colores = ['#008FFB', '#00E396', '#feb019', '#ff4560', '#775dd0', '#546e7a', '#26a69a', '#d10ce8'];
 
 $.ajax({
+  url: '/consulta_respuestas/' + 1 + '/',
+  dataType: 'json',
+  success: function (data) {
+    // console.log(data)
+
+    const respuestas = [];
+    const totales = [];
+
+    for (let i = 0; i < data.length; i++) {
+      respuestas.push(data[i].respuesta);
+      totales.push(data[i].total);
+    }
+    // console.log( respuestas);
+    // console.log( totales);
+
+// fetch('/consulta/')
+//     .then(response => response.json())
+//     .then(data => {
+//         // 'data' contiene los resultados de la consulta SQL en formato JSON
+//         // Puedes procesar los datos y guardarlos en un arreglo para usarlos con Chart.js
+//         const results = data.results;
+//         // console.log(results)
+
+//         const respuestas = [];
+//         const totales = [];
+
+//         for (let i = 0; i < results.length; i++) {
+//             respuestas.push(results[i].respuesta);
+//             totales.push(results[i].total);
+//         }
+//         // console.log( respuestas);
+//         // console.log( totales);
+
+//             var options = {
+//               series: [{
+//               data: totales
+//             }],
+//               chart: {
+//               height: 350,
+//               type: 'bar',
+
+//             },
+//             plotOptions: {
+//               bar: {
+//                 columnWidth: '45%',
+//                 distributed: true,
+//               }
+//             },
+//             dataLabels: { //mostrar el numero dentro de la barra
+//               enabled: false
+//             },
+//             legend: { //mostrar abajo de la grafica los indicadores de cada color
+//               show: true
+//             },
+//             xaxis: {
+//               categories: respuestas, 
+//               labels: {
+//                 style: {
+//                   fontSize: '12px'
+//                 }
+//               }
+//             }
+//             };
+//             var chart = new ApexCharts(document.querySelector('#growthchart'), options);
+//             chart.render();
+
+
+//     })
+//     .catch(error => {
+//         console.error('Error al obtener los datos:', error);
+//     });
+
+
+
+var colores = ['#008FFB', '#00E396', '#feb019', '#ff4560', '#775dd0', '#546e7a', '#26a69a', '#d10ce8'];
+
+$.ajax({
   url: '/consulta_total',
   dataType: 'json',
   success: function (data) {

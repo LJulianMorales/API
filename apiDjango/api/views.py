@@ -386,6 +386,7 @@ class redireccionarIndex(APIView):
     def get(self, request):
         # Lógica para renderizar la página 'index.html' en una solicitud GET
         GoogleSheetsAPIView()
+        # consulta(request)
         return render(request, self.template_name)
 
     def post(self, request):
@@ -650,6 +651,8 @@ from google.oauth2 import service_account
 import gspread
 from rest_framework.response import Response    
 from django.shortcuts import get_object_or_404
+from django.db import connection
+
 
 class GoogleSheetsAPIView(APIView):
     def get(self, request):
@@ -675,6 +678,7 @@ class GoogleSheetsAPIView(APIView):
         data = worksheet.get_all_records()
         
         # Borra los registros anteriores en el modelo Respuesta
+        
         Respuesta.objects.all().delete()
 
         # Itera a través de los datos y almacena las respuestas en el modelo Respuesta
@@ -682,101 +686,16 @@ class GoogleSheetsAPIView(APIView):
             for pregunta, respuesta in entry.items():
                 if pregunta == "Marca temporal" or pregunta == "Dirección de correo electrónico":
                     continue
-                if pregunta == "9.- ¿Que notificaciones te gustaria recibir?":
-                    numero_pregunta = "9"
 
-                    # Dividir la cadena en respuestas individuales
-                    respuestas = respuesta.split(', ')
-                    
-                    for respuesta_individual in respuestas:
-                        #print(f"{numero_pregunta} {respuesta_individual}")
-                        _cuestion = get_object_or_404(Pregunta, description=pregunta)
-                        _id = int(_cuestion.pk)
-                        
-                        _response = Respuesta(cuestion=_id, response=respuesta_individual)
-                        _response.save()
+                # Depuración: Agregar impresiones
+                print(f"Pregunta: {pregunta}, Respuesta: {respuesta}")
 
-                else:
-                   
-                    #print(f"Pregunta: {pregunta}, Respuesta: {respuesta}")
-                    
-                    _cuestion = get_object_or_404(Pregunta, description=pregunta)
-                    _id = int(_cuestion.pk)
+                # Busca la pregunta en el modelo Cuestion por descripción
+                _cuestion = get_object_or_404(Pregunta, description=pregunta)
+                _id = int(_cuestion.pk)
 
-                    _response = Respuesta(cuestion=_id, response=respuesta)
-                    _response.save()
+                # Crea un nuevo objeto Response con el id de la pregunta y la respuesta
+                _response = Respuesta(cuestion=_id, response=respuesta)
+                _response.save()
 
         return Response({"Datos de Google Sheets": data})
-
-
-from django.db import connection
-from django.http import JsonResponse
-from django.contrib import messages
-
-
-def consulta_respuestas(request, cuestion):
-    # Define la consulta SQL
-    query = """
-        SELECT response AS respuesta, COUNT(response) AS total
-        FROM api_respuesta
-        WHERE cuestion = %s
-        GROUP BY response;
-    """
-
-    # Ejecuta la consulta SQL con el valor de 'cuestion'
-    with connection.cursor() as cursor:
-        cursor.execute(query, [cuestion])
-        result = cursor.fetchall()
-
-    # Formatea los resultados como un diccionario
-    data = [{'respuesta': row[0], 'total': row[1]} for row in result]
-
-    # Devuelve los resultados en formato JSON
-    return JsonResponse(data, safe=False)
-
-def consulta_total(request):
-    # Define la consulta SQL
-    query = """
-        SELECT cuestion, COUNT(response) AS total
-        FROM public.api_respuesta
-        WHERE cuestion=1
-        GROUP BY cuestion;
-    """
-
-    # Ejecuta la consulta SQL con el valor de 'cuestion'
-    with connection.cursor() as cursor:
-        cursor.execute(query)
-        result = cursor.fetchall()
-
-    # Formatea los resultados como un diccionario
-    data = [{'respuesta': row[0], 'total': row[1]} for row in result]
-
-    # Devuelve los resultados en formato JSON
-    return JsonResponse(data, safe=False)
-
-from django.http import JsonResponse, HttpResponseRedirect
-from django.urls import reverse
-
-def iniciar_sesion(request):
-
-    if request.method == 'POST':
-        email = request.POST.get('inputEmail')
-        password = request.POST.get('inputPassword')
-        print(email)
-        print(password)
-
-        try:
-            account = Account.objects.get(email=email, password=password)
-            account_id = account.account_id
-
-            # Configura la cookie 'account_id'
-
-            response = render(request, 'pages/profile-info.html', {'user_info': account_id})
-            response.set_cookie('account_id', account_id)                
-            return response
-        
-        except Account.DoesNotExist:
-            # Mostrar un mensaje de error
-            return JsonResponse({'status': 'error'})
-
-    return JsonResponse({'status': 'error'})

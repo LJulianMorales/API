@@ -55,6 +55,11 @@ urlpatterns = [
     path('cerrar_sesion', views.cerrar_sesion, name='cerrar_sesion'),  
     path('profile-info/', views.profile_info, name='profile_info'),
     path('google/',views.GoogleSheetsAPIView.as_view(), name='google'),
+    # path('consulta/',views.consulta, name='consulta'),
+    path('consulta_respuestas/<int:cuestion>/', views.consulta_respuestas, name='consulta_respuestas'),
+    
+
+    
     path('consulta_respuestas/<int:cuestion>/', views.consulta_respuestas, name='consulta_respuestas'),
 
     path('consulta_total', views.consulta_total, name='consulta_total'),
