@@ -50,8 +50,14 @@ urlpatterns = [
     path('auth/microsoft/login/', views.microsoft_login, name='microsoft_login'),
     path('auth/microsoft/callback/', views.microsoft_callback, name='microsoft_callback'),
 
-    path('alumnos/', views.registrar_usuario, name='registrar_usuario'),    
+    path('registrar_usuario', views.registrar_usuario, name='registrar_usuario'),    
+    path('iniciar_sesion', views.iniciar_sesion, name='iniciar_sesion'),  
+    path('cerrar_sesion', views.cerrar_sesion, name='cerrar_sesion'),  
+    path('profile-info/', views.profile_info, name='profile_info'),
     path('google/',views.GoogleSheetsAPIView.as_view(), name='google'),
+    path('consulta_respuestas/<int:cuestion>/', views.consulta_respuestas, name='consulta_respuestas'),
+
+    path('consulta_total', views.consulta_total, name='consulta_total'),
 
     # Authentication
     path('accounts/login/', views.UserLoginView.as_view(), name='login'),

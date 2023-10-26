@@ -163,3 +163,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'iscs.teschi@outlook.es'
 EMAIL_HOST_PASSWORD = 'ejqbpxphbllsqamb'
+
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 días en segundos
+SESSION_COOKIE_NAME = "ISCS_SESSION"

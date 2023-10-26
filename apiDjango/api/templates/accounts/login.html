@@ -5,76 +5,87 @@
 
 {% block content %}
 
-  <div class="auth-main ">
-    <div class="auth-wrapper v3">
-      <div class="auth-form bg-image" style="
-      background-image: url('/static/images/TeschiBG.webp');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      ">
-        <div class="card my-5 bg-light bg-opacity-75 rounded-5">
-          <div class="card-body ">
-            <a class="d-flex justify-content-center">
-              <img src="{% static 'images/Teschilogo.png' %}" style="width: 300px;" alt="logo"/>
-            </a>
-            <div class="row">
-              <div class="d-flex justify-content-center">
-                <div class="auth-header">
-                  <h2 class="mt-4" style="color: #00793e;"><b>Iniciar sesión</b></h2>
-                  <p class="f-16 mt-2">Ingresa tus credenciales para continuar</p>
-                </div>
+<div class="auth-main">
+  <div class="auth-wrapper v3">
+    <div class="auth-form bg-image" style="
+    background-image: url('/static/images/TeschiBG.webp');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    ">
+      <div class="card my-5 bg-light bg-opacity-75 rounded-5">
+        <div class="card-body ">
+          <a class="d-flex justify-content-center">
+            <img src="{% static 'images/Teschilogo.png' %}" style="width: 300px;" alt="logo" />
+          </a>
+          <div class="row">
+            <div class="d-flex justify-content-center">
+              <div class="auth-header">
+                <h2 class="mt-4" style="color: #00793e;"><b>Iniciar sesión</b></h2>
               </div>
             </div>
-            <form method="POST" action="{% url 'microsoft_login' %}">
-              {% csrf_token %}
+          </div>
+          <form method="POST" action="{% url 'microsoft_login' %}">
+            {% csrf_token %}
+            <div id="microsoft-form">
               <div class="d-grid">
                 <button type="submit" class="btn mt-2 btn-light-primary bg-light text-muted">
                   Iniciar con <img src="{% static 'images/authentication/office-365-1.svg' %}" style="width: 150px;" />
                 </button>
               </div>
-            </form>
-            <div class="saprator mt-3">
-              <span>Ó</span>
             </div>
-            <h5 class="my-4 d-flex justify-content-center">Iniciar sesión con usuario</h5>
-            <form method="post" >
-              {% csrf_token %}
-
-              {% if form.non_field_errors %}
-                {% for error in form.non_field_errors %}
-                  <span class="text-danger">{{ error }}</span>
-                {% endfor %}
-              {% endif %}
-
-              {% for field in form %}
-              <div class="form-floating mb-3">
-                {{field}}
-                <label for="floatingInput">{{ field.label }}</label>
-              </div>
-              <span class="text-danger">{{ field.errors }}</span>
-              {% endfor %}
-              
-              <div class="d-flex mt-1 justify-content-between">
-                <div class="form-check">
-                  <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
-                  <label class="form-check-label text-muted" for="customCheckc1">Mantener sesión iniciada</label>
-                </div>
-                <h5 class="text-secondary">
-                  <a class="text-decoration-underline" href="{% url 'password_reset' %}">Olvide mi contraseña</a>
-                </h5>
-              </div>
-              <div class="d-grid mt-4">
-                <button type="submit" class="btn text-white" style="background-color: #00793e;">Ingresar</button>
-              </div>
-            </form>
-            <hr />
-            <h5 class="d-flex justify-content-center">Quieres crear una cuenta?
-              <a class="ms-2 text-decoration-underline" href="{% url 'register' %}">Registrate aquí</a>
-            </h5>
+          </form>
+          <div class="saprator mt-3">
+            <span><button id="toggle-form-button" class="btn btn-light">Iniciar sesión con correo</button></span>
           </div>
+          <h5 class="my-4 d-flex justify-content-center">Iniciar sesión con usuario</h5>
+          <form method="POST" action="{% url 'iniciar_sesion' %}" id="email-form">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="inputEmail">Correo:</label>
+              <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Ingresa tu correo">
+            </div>
+            <div class="form-group">
+              <label for="inputPassword">Contraseña:</label>
+              <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Ingresa tu contraseña">              
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnIniciar">Iniciar sesión</button>
+          </form>
+          <hr />
+          <h5 class="d-flex justify-content-center">¿Quieres crear una cuenta?
+            <a class="ms-2 text-decoration-underline" href="{% url 'register' %}">Registrate aquí</a>
+          </h5>          
         </div>
       </div>
     </div>
   </div>
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const microsoftForm = document.getElementById("microsoft-form");
+      const emailForm = document.getElementById("email-form");
+      const toggleButton = document.getElementById("toggle-form-button");
+      var valor = true
+      microsoftForm.style.display = "block";
+      emailForm.style.display = "none";
+  
+      toggleButton.addEventListener("click", function () {
+        var uno = document.getElementById('toggle-form-button');
+        valor?uno.innerText = "Iniciar sesión con Microsoft":uno.innerText = "Iniciar sesión con correo";
+        valor=!valor;
+        if (microsoftForm.style.display === "block") {
+          microsoftForm.style.display = "none";
+          emailForm.style.display = "block";
+        } else {
+          microsoftForm.style.display = "block";
+          emailForm.style.display = "none";
+        }
+      });
+    });
+
+  </script>
+  
+    
 {% endblock content %}

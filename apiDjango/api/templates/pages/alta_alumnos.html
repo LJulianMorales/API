@@ -25,10 +25,19 @@
         }
         return cookieValue;
     }
+
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0, // Desplazarse a la parte superior
+        left: 0, // No cambiar la posición horizontal
+        behavior: 'smooth' // Desplazamiento suave (animado)
+      });
+    }
     
     $(document).ready(function() {
         $('#btnRegistrar').click(function() {
             // Obtén los datos del formulario como un objeto
+            
             var formData = {
                 enrollment: $('#enrollment').val(),
                 type_user_id: $('#type_user_id').val(),
@@ -41,22 +50,29 @@
                 mobile: $('#mobile').val()
             };
             
-
-            // Realiza una solicitud AJAX para ejecutar la función de Python
             $.ajax({
-                url: '{% url 'registrar_usuario' %}', // Reemplaza con la URL de tu vista
+                url: "{% url 'registrar_usuario' %}", 
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(formData), 
                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken') // Agrega el token CSRF como encabezado
-                },// Convierte el objeto en una cadena JSON
-                success: function(data) {
-                  if (data.status === 'success') {
-            // La función se ejecutó con éxito, puedes mostrar un mensaje de éxito
-                      $('#mensaje').html('La función se ejecutó con éxito.');
-                  } else if (data.status === 'error') {
-                      // Hubo un error, muestra el mensaje de error devuelto desde la vista
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                success: function(data) {                  
+                  console.log(data);
+                  if (data.status === 'success') {                            
+                      $('#mensaje').html('Alumno creado correctamente.');    
+                      $('#enrollment').val('');
+                      $('#type_user_id').val('');
+                      $('#first_name').val('');
+                      $('#last_name').val('');
+                      $('#middle_name').val('');
+                      $('#curp').val('');
+                      $('#nss').val('');
+                      $('#phone').val('');
+                      $('#mobile').val('');
+                      scrollToTop();               
+                  } else if (data.status === 'error') {                     
                       $('#mensaje').html('Error: ' + data.message);
                   }
 
@@ -66,6 +82,7 @@
                     }, 10000);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                  alert("No correct");
                   // Aquí manejas los errores de la solicitud AJAX
                   $('#mensaje').html('Hubo un error al ejecutar la función: ' + errorThrown);
                   $('#mensaje').show();

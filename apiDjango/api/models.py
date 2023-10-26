@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.sessions.models import Session
 
 class UserType(models.Model):
     type_user_id = models.AutoField(primary_key=True)
@@ -20,6 +21,11 @@ class CustomUser(models.Model):
     nss = models.CharField(max_length=30, unique=True, default='')
     phone = models.CharField(max_length=30, default='')
     mobile = models.CharField(max_length=30, default='')
+
+class CustomSession(models.Model):
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, null=True, blank=True, on_delete=models.CASCADE)    
+
 
 class Pregunta(models.Model):
     description = models.TextField(max_length=100)
