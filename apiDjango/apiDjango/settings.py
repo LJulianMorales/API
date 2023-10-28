@@ -96,7 +96,7 @@ DATABASES = {
     }
 }
 """
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -104,6 +104,17 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'Postgres1234',
         'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db_control_escolar',
+        'USER': 'iscs',
+        'PASSWORD': 'XGxjn62qIpqAuFcrkwhTvdH6QiZ0XgFo',
+        'HOST': 'oregon-postgres.render.com',
         'PORT': '5432',
     }
 }

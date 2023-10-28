@@ -385,7 +385,6 @@ class redireccionarIndex(APIView):
     template_name = "pages/index.html"
     def get(self, request):
         # Lógica para renderizar la página 'index.html' en una solicitud GET
-        GoogleSheetsAPIView()
         return render(request, self.template_name)
 
     def post(self, request):
@@ -653,6 +652,7 @@ from django.shortcuts import get_object_or_404
 
 class GoogleSheetsAPIView(APIView):
     def get(self, request):
+        
         # Ruta al archivo de credenciales JSON
         credentials_file = "api/templates/credentials/django-402605-a2f85ac7560a.json"
         # Configura las credenciales utilizando google-auth
