@@ -82,7 +82,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'apiDjango.wsgi.application'
-#ALLOWED_HOSTS=['teschi-iscs.onrender.com']
+ALLOWED_HOSTS=['teschi-iscs.onrender.com']
 
 
 # Database
