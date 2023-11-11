@@ -82,7 +82,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'apiDjango.wsgi.application'
-ALLOWED_HOSTS=['teschi-iscs.onrender.com']
+#ALLOWED_HOSTS=['teschi-iscs.onrender.com']
 
 
 # Database
@@ -159,8 +159,12 @@ USE_TZ = True
 
 # settings.py   
 import os
+# settings.py
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 # Default primary key field type
